@@ -3,7 +3,8 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 require('dotenv').config();
-const apiRouter = require('./routers/api');
+const apiThreadsRouter = require('./routers/api/threads');
+const apiRepliesRouter = require('./routers/api/replies');
 
 const app = express();
 
@@ -35,6 +36,7 @@ mongoose.connection.on('error', (error) => console.log(error));
 app.get('/', (req, res) => res.render('index'));
 
 // Routing for API
-app.use('/api', apiRouter);
+app.use('/api', apiThreadsRouter);
+app.use('/api', apiRepliesRouter);
 
 module.exports = app;
