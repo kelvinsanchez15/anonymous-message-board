@@ -43,7 +43,7 @@ router
       populate: {
         path: 'replies',
         select: '-reported -delete_password -__v',
-        options: { limit: 3 },
+        options: { limit: 3, sort: { created_on: 'desc' } },
       },
     };
 
