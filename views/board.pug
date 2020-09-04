@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    include includes/head.pug
+    title= board    
+  body    
+    div.container
+      h1=`/b/ - ${board}`
+      each thread in threads
+        div(class="card border-primary mb-3", style="max-width: 40rem;")
+          div(class="card-header")=`Anonymous ${thread.created_on} ${thread._id}` 
+          div(class="card-body")
+            p(class="card-text")=thread.text
+            each reply in thread.replies
+              div(class="card border-light mb-3")
+                div(class="card-header")=`Anonymous ${reply.created_on} ${reply._id}`
+                div(class="card-body")
+                  p(class="card-text")=reply.text             
+            
+        
+
+    include includes/foot.pug
+
+
+
