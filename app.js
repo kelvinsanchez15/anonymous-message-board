@@ -5,6 +5,7 @@ const methodOverride = require('method-override');
 require('dotenv').config();
 const apiThreadsRouter = require('./routers/api/threads');
 const apiRepliesRouter = require('./routers/api/replies');
+const frontendBoardRouter = require('./routers/frontend/board');
 
 const app = express();
 
@@ -38,5 +39,8 @@ app.get('/', (req, res) => res.render('index'));
 // Routing for API
 app.use('/api', apiThreadsRouter);
 app.use('/api', apiRepliesRouter);
+
+// Routing for Frontend
+app.use('/b/', frontendBoardRouter);
 
 module.exports = app;
