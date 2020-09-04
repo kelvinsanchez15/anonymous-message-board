@@ -59,9 +59,13 @@ router
     const { reply_id } = req.query;
 
     try {
-      const reply = await Reply.findByIdAndUpdate(reply_id, {
-        reported: true,
-      });
+      const reply = await Reply.findByIdAndUpdate(
+        reply_id,
+        {
+          reported: true,
+        },
+        { useFindAndModify: false }
+      );
 
       if (!reply) return res.status(404).json({ error: 'reply not found' });
 
@@ -83,7 +87,7 @@ router
       if (reply.delete_password !== delete_password)
         return res.status(401).send('incorrect password');
 
-      await reply.update({ text: '[deleted]' });
+      await reply.updateOne({ text: '[deleted]' }, { useFindAndModify: false });
 
       return res.status(200).send('success');
     } catch (err) {

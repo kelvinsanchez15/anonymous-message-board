@@ -66,9 +66,13 @@ router
     const { thread_id } = req.query;
 
     try {
-      const thread = await Thread.findByIdAndUpdate(thread_id, {
-        reported: true,
-      });
+      const thread = await Thread.findByIdAndUpdate(
+        thread_id,
+        {
+          reported: true,
+        },
+        { useFindAndModify: false }
+      );
 
       if (!thread) return res.status(404).json({ error: 'thread not found' });
 
