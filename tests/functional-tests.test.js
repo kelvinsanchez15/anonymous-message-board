@@ -13,11 +13,19 @@ afterAll(async () => {
 });
 
 const mockThread = {
-  text: 'Test text',
+  text: 'Test thread text',
   delete_password: 'password',
   reported: false,
   replies: [],
 };
+
+const mockReply = {
+  text: 'Test reply text',
+  delete_password: 'password',
+  reported: false,
+};
+
+let thread5Id;
 
 describe('Functional Tests', () => {
   describe('API ROUTING FOR /api/threads/:board', () => {
@@ -54,7 +62,12 @@ describe('Functional Tests', () => {
         expect(response.status).toBe(200);
         expect(response.body).toHaveLength(10);
         expect(response.body[0]).toHaveProperty('text', 'thread5');
+        expect(response.body[0]).not.toHaveProperty('reported');
+        expect(response.body[0]).not.toHaveProperty('delete_password');
         expect(response.body[0].replies).toHaveLength(3);
+
+        // Save _id for future tests
+        thread5Id = response.body[0]._id;
       });
     });
 
@@ -115,12 +128,129 @@ describe('Functional Tests', () => {
   });
 
   describe('API ROUTING FOR /api/replies/:board', () => {
-    describe('POST', () => {});
+    describe('POST => object with reply data', () => {
+      test('Required fields filled in', async () => {
+        const response = await request(app).post('/api/replies/general').query({
+          text: mockReply.text,
+          delete_password: mockReply.delete_password,
+          thread_id: thread5Id,
+        });
 
-    describe('GET', () => {});
+        expect(response.status).toBe(201);
+        expect(response.body).toMatchObject(mockReply);
+        expect(response.body).toHaveProperty('_id');
+        expect(response.body).toHaveProperty('created_on');
 
-    describe('PUT', () => {});
+        // Save _id for future tests
+        mockReply._id = response.body._id;
+      });
 
-    describe('DELETE', () => {});
+      test('Missing required field', async () => {
+        const response = await request(app).post('/api/replies/general').query({
+          text: mockReply.text,
+          thread_id: thread5Id,
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Invalid thread_id', async () => {
+        const response = await request(app).post('/api/replies/general').query({
+          text: mockReply.text,
+          delete_password: mockReply.delete_password,
+          thread_id: '5f516ca9a4cfa812cac2c13e',
+        });
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'thread not found');
+      });
+    });
+
+    describe('GET => thread object with all replies', () => {
+      test('Valid thread_id', async () => {
+        const response = await request(app)
+          .get('/api/replies/mockboard')
+          .query({ thread_id: thread5Id });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('text', 'thread5');
+        expect(response.body).toHaveProperty('_id');
+        expect(response.body).toHaveProperty('created_on');
+        expect(response.body).toHaveProperty('bumped_on');
+        expect(response.body).not.toHaveProperty('reported');
+        expect(response.body).not.toHaveProperty('delete_password');
+        expect(response.body.replies).toHaveLength(6);
+      });
+
+      test('Invalid thread_id', async () => {
+        const response = await request(app)
+          .get('/api/replies/general')
+          .query({ thread_id: '5f516ca9a4cfa812cac2c13e' });
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'thread not found');
+      });
+    });
+
+    describe('PUT => text response with "success" report', () => {
+      test('Invalid reply_id', async () => {
+        const response = await request(app).put('/api/replies/general').query({
+          thread_id: thread5Id,
+          reply_id: '5f516ca9a4cfa812cac2c13e',
+        });
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'reply not found');
+      });
+
+      test('Valid reply_id', async () => {
+        const response = await request(app).put('/api/replies/general').query({
+          thread_id: thread5Id,
+          reply_id: mockReply._id,
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.text).toBe('success');
+      });
+    });
+
+    describe('DELETE => text response with "success" deletion', () => {
+      test('Invalid reply_id', async () => {
+        const response = await request(app)
+          .delete('/api/replies/general')
+          .query({
+            thread_id: thread5Id,
+            reply_id: '5f516ca9a4cfa812cac2c13e',
+          });
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'reply not found');
+      });
+
+      test('Valid reply_id and Invalid delete_password', async () => {
+        const response = await request(app)
+          .delete('/api/replies/general')
+          .query({
+            thread_id: thread5Id,
+            reply_id: mockReply._id,
+            delete_password: '12345',
+          });
+
+        expect(response.status).toBe(401);
+        expect(response.text).toBe('incorrect password');
+      });
+
+      test('Valid reply_id and Valid delete_password', async () => {
+        const response = await request(app)
+          .delete('/api/replies/general')
+          .query({
+            thread_id: thread5Id,
+            reply_id: mockReply._id,
+            delete_password: mockReply.delete_password,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.text).toBe('success');
+      });
+    });
   });
 });
