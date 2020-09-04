@@ -6,19 +6,42 @@ html
   body    
     div.container
       h1=`/b/ - ${board}`
-      each thread in threads
-        div(class="card border-primary mb-3", style="max-width: 40rem;")
-          div(class="card-header")=`Anonymous ${thread.created_on} ${thread._id}` 
-          div(class="card-body")
-            p(class="card-text")=thread.text
-            each reply in thread.replies
-              div(class="card border-light mb-3")
-                div(class="card-header")=`Anonymous ${reply.created_on} ${reply._id}`
-                div(class="card-body")
-                  p(class="card-text")=reply.text             
-            
-        
-
+      div.dropdown.dropdown 
+        button(class="btn btn-success dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Create Thread
+        div.dropdown-menu.w-100
+          form.px-4.py-3(action=board, method="post")
+            div.form-group
+              label(for="text") Text:
+              input(class="form-control", type="text", name="text", placeholder="A placeholder", required="required")
+            div.form-group
+              label(for="delete_password") Delete Password:
+              input(class="form-control", type="text", name="delete_password", placeholder="A placeholder", required="required")
+            input(class="btn btn-outline-success" type="submit" value="Submit")
+      if !threads.error
+        each thread in threads
+          div(class="card border-primary mb-3")
+            div(class="card-header d-flex justify-content-between align-items-center flex-wrap")=`Anonymous ${thread.created_on} ${thread._id}`
+              div.buttons.d-flex
+                form(action=`${board}?_method=PUT`, method="post")
+                  input(type="hidden", name="thread_id", value=thread._id)
+                  input(class="btn btn-outline-warning", type="submit" value="Report")
+                div.dropdown.dropdown 
+                  button(class="btn btn-outline-danger dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Delete
+                  div.dropdown-menu.w-100
+                    form.px-4.py-3(action=`${board}?_method=DELETE`, method="post")
+                      input(type="hidden", name="thread_id", value=thread._id)                    
+                      div.form-group
+                        label(for="delete_password") Delete Password:
+                        input(class="form-control", type="text", name="delete_password", placeholder="A placeholder", required="required")
+                      input(class="btn btn-outline-danger", type="submit" value="Delete")
+            div(class="card-body")
+              p(class="card-text")=thread.text              
+              each reply in thread.replies
+                div(class="card border-light mb-3")
+                  div(class="card-header")=`Anonymous ${reply.created_on} ${reply._id}`
+                  div(class="card-body")
+                    p(class="card-text")=reply.text
+                                 
     include includes/foot.pug
 
 
