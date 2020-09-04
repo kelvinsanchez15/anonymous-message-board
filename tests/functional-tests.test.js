@@ -31,7 +31,7 @@ describe('Functional Tests', () => {
   describe('API ROUTING FOR /api/threads/:board', () => {
     describe('POST => object with thread data', () => {
       test('Required fields filled in', async () => {
-        const response = await request(app).post('/api/threads/general').query({
+        const response = await request(app).post('/api/threads/general').send({
           text: mockThread.text,
           delete_password: mockThread.delete_password,
         });
@@ -49,7 +49,7 @@ describe('Functional Tests', () => {
       test('Missing required field', async () => {
         const response = await request(app)
           .post('/api/threads/general')
-          .query({ text: mockThread.text });
+          .send({ text: mockThread.text });
 
         expect(response.status).toBe(400);
       });
@@ -75,7 +75,7 @@ describe('Functional Tests', () => {
       test('Invalid thread_id', async () => {
         const response = await request(app)
           .put('/api/threads/general')
-          .query({ thread_id: '5f516ca9a4cfa812cac2c13e' });
+          .send({ thread_id: '5f516ca9a4cfa812cac2c13e' });
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty('error', 'thread not found');
@@ -84,7 +84,7 @@ describe('Functional Tests', () => {
       test('Valid thread_id', async () => {
         const response = await request(app)
           .put('/api/threads/general')
-          .query({ thread_id: mockThread._id });
+          .send({ thread_id: mockThread._id });
 
         expect(response.status).toBe(200);
         expect(response.text).toBe('success');
@@ -95,7 +95,7 @@ describe('Functional Tests', () => {
       test('Invalid thread_id', async () => {
         const response = await request(app)
           .delete('/api/threads/general')
-          .query({ thread_id: '5f516ca9a4cfa812cac2c13e' });
+          .send({ thread_id: '5f516ca9a4cfa812cac2c13e' });
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty('error', 'thread not found');
@@ -104,7 +104,7 @@ describe('Functional Tests', () => {
       test('Valid thread_id and Invalid delete_password', async () => {
         const response = await request(app)
           .delete('/api/threads/general')
-          .query({
+          .send({
             thread_id: mockThread._id,
             delete_password: '123456',
           });
@@ -116,7 +116,7 @@ describe('Functional Tests', () => {
       test('Valid thread_id and Valid delete_password', async () => {
         const response = await request(app)
           .delete('/api/threads/general')
-          .query({
+          .send({
             thread_id: mockThread._id,
             delete_password: mockThread.delete_password,
           });
@@ -130,7 +130,7 @@ describe('Functional Tests', () => {
   describe('API ROUTING FOR /api/replies/:board', () => {
     describe('POST => object with reply data', () => {
       test('Required fields filled in', async () => {
-        const response = await request(app).post('/api/replies/general').query({
+        const response = await request(app).post('/api/replies/general').send({
           text: mockReply.text,
           delete_password: mockReply.delete_password,
           thread_id: thread5Id,
@@ -146,7 +146,7 @@ describe('Functional Tests', () => {
       });
 
       test('Missing required field', async () => {
-        const response = await request(app).post('/api/replies/general').query({
+        const response = await request(app).post('/api/replies/general').send({
           text: mockReply.text,
           thread_id: thread5Id,
         });
@@ -155,7 +155,7 @@ describe('Functional Tests', () => {
       });
 
       test('Invalid thread_id', async () => {
-        const response = await request(app).post('/api/replies/general').query({
+        const response = await request(app).post('/api/replies/general').send({
           text: mockReply.text,
           delete_password: mockReply.delete_password,
           thread_id: '5f516ca9a4cfa812cac2c13e',
@@ -170,7 +170,7 @@ describe('Functional Tests', () => {
       test('Valid thread_id', async () => {
         const response = await request(app)
           .get('/api/replies/mockboard')
-          .query({ thread_id: thread5Id });
+          .send({ thread_id: thread5Id });
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('text', 'thread5');
@@ -185,7 +185,7 @@ describe('Functional Tests', () => {
       test('Invalid thread_id', async () => {
         const response = await request(app)
           .get('/api/replies/general')
-          .query({ thread_id: '5f516ca9a4cfa812cac2c13e' });
+          .send({ thread_id: '5f516ca9a4cfa812cac2c13e' });
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty('error', 'thread not found');
@@ -194,7 +194,7 @@ describe('Functional Tests', () => {
 
     describe('PUT => text response with "success" report', () => {
       test('Invalid reply_id', async () => {
-        const response = await request(app).put('/api/replies/general').query({
+        const response = await request(app).put('/api/replies/general').send({
           thread_id: thread5Id,
           reply_id: '5f516ca9a4cfa812cac2c13e',
         });
@@ -204,7 +204,7 @@ describe('Functional Tests', () => {
       });
 
       test('Valid reply_id', async () => {
-        const response = await request(app).put('/api/replies/general').query({
+        const response = await request(app).put('/api/replies/general').send({
           thread_id: thread5Id,
           reply_id: mockReply._id,
         });
@@ -218,7 +218,7 @@ describe('Functional Tests', () => {
       test('Invalid reply_id', async () => {
         const response = await request(app)
           .delete('/api/replies/general')
-          .query({
+          .send({
             thread_id: thread5Id,
             reply_id: '5f516ca9a4cfa812cac2c13e',
           });
@@ -229,7 +229,7 @@ describe('Functional Tests', () => {
       test('Valid reply_id and Invalid delete_password', async () => {
         const response = await request(app)
           .delete('/api/replies/general')
-          .query({
+          .send({
             thread_id: thread5Id,
             reply_id: mockReply._id,
             delete_password: '12345',
@@ -242,7 +242,7 @@ describe('Functional Tests', () => {
       test('Valid reply_id and Valid delete_password', async () => {
         const response = await request(app)
           .delete('/api/replies/general')
-          .query({
+          .send({
             thread_id: thread5Id,
             reply_id: mockReply._id,
             delete_password: mockReply.delete_password,

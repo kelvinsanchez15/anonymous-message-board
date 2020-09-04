@@ -10,7 +10,7 @@ router
 
   // POST a reply to a thread on a specific board
   .post(async (req, res) => {
-    const { text, delete_password, thread_id } = req.query;
+    const { text, delete_password, thread_id } = req.body;
     const reply = new Reply({ text, delete_password });
 
     try {
@@ -33,7 +33,7 @@ router
 
   // GET an entire thread with all it's replies
   .get(async (req, res) => {
-    const { thread_id } = req.query;
+    const { thread_id } = req.body;
 
     const opts = {
       path: 'replies',
@@ -56,7 +56,7 @@ router
 
   // Report a reply and change it's reported value to true sending a PUT request
   .put(async (req, res) => {
-    const { reply_id } = req.query;
+    const { reply_id } = req.body;
 
     try {
       const reply = await Reply.findByIdAndUpdate(
@@ -77,7 +77,7 @@ router
 
   // Delete a reply (just changing the text to '[deleted]') sending a DELETE request
   .delete(async (req, res) => {
-    const { reply_id, delete_password } = req.query;
+    const { reply_id, delete_password } = req.body;
 
     try {
       const reply = await Reply.findById(reply_id);

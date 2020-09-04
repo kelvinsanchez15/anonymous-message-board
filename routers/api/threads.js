@@ -11,7 +11,7 @@ router
   // POST a thread to a specific message board with form data
   .post(async (req, res) => {
     const { board } = req.params;
-    const thread = new Thread(req.query);
+    const thread = new Thread(req.body);
 
     try {
       await thread.save();
@@ -63,7 +63,7 @@ router
 
   // Report a thread and change it's reported value to true sending a PUT request
   .put(async (req, res) => {
-    const { thread_id } = req.query;
+    const { thread_id } = req.body;
 
     try {
       const thread = await Thread.findByIdAndUpdate(
@@ -84,7 +84,7 @@ router
 
   // Delete a thread completely sending a DELETE request
   .delete(async (req, res) => {
-    const { thread_id, delete_password } = req.query;
+    const { thread_id, delete_password } = req.body;
 
     try {
       const thread = await Thread.findById(thread_id);
