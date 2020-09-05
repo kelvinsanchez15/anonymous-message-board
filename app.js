@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
-const session = require('express-session');
 const mongoose = require('mongoose');
+const session = require('cookie-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 require('dotenv').config();
