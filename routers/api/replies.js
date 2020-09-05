@@ -33,7 +33,7 @@ router
 
   // GET an entire thread with all it's replies
   .get(async (req, res) => {
-    const { thread_id } = req.body;
+    const { thread_id } = req.query;
 
     const opts = {
       path: 'replies',

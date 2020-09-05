@@ -168,9 +168,9 @@ describe('Functional Tests', () => {
 
     describe('GET => thread object with all replies', () => {
       test('Valid thread_id', async () => {
-        const response = await request(app)
-          .get('/api/replies/mockboard')
-          .send({ thread_id: thread5Id });
+        const response = await request(app).get(
+          `/api/replies/mockboard?thread_id=${thread5Id}`
+        );
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('text', 'thread5');
@@ -183,9 +183,9 @@ describe('Functional Tests', () => {
       });
 
       test('Invalid thread_id', async () => {
-        const response = await request(app)
-          .get('/api/replies/general')
-          .send({ thread_id: '5f516ca9a4cfa812cac2c13e' });
+        const response = await request(app).get(
+          `/api/replies/mockboard?thread_id=5f516ca9a4cfa812cac2c13e`
+        );
 
         expect(response.status).toBe(404);
         expect(response.body).toHaveProperty('error', 'thread not found');
