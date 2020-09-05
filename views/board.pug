@@ -4,19 +4,22 @@ html
     include includes/head.pug
     title= board    
   body    
-    div.container      
-      h1=`/b/ - ${board}`
+    div.container
+      div.col.text-center.mb-2           
+        a.h1(href=`/b/${board}`)=`/b/ - ${board}`
+      
       if success && success.length > 0
         div(class="alert alert-success")=success
       if error && error.length > 0
         div(class="alert alert-danger")=error
-      div.dropdown.dropdown 
+
+      div.dropdown.dropdown.mb-2
         button(class="btn btn-success dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Create Thread
         div.dropdown-menu.w-100
           form.px-4.py-3(action=board, method="post")
             div.form-group
               label(for="text") Text:
-              input(class="form-control", type="text", name="text", placeholder="A placeholder", required="required")
+              textarea(class="form-control" name="text", cols="30", rows="6" placeholder="A placeholder", required="required")
             div.form-group
               label(for="delete_password") Delete Password:
               input(class="form-control", type="text", name="delete_password", placeholder="A placeholder", required="required")

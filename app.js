@@ -9,6 +9,7 @@ require('dotenv').config();
 const apiThreadsRouter = require('./routers/api/threads');
 const apiRepliesRouter = require('./routers/api/replies');
 const frontendBoardRouter = require('./routers/frontend/board');
+const frontendThreadRouter = require('./routers/frontend/thread');
 
 const app = express();
 
@@ -59,5 +60,6 @@ app.use('/api', apiRepliesRouter);
 
 // Routing for Frontend
 app.use('/b/', frontendBoardRouter);
+app.use('/b/', frontendThreadRouter);
 
 module.exports = app;
