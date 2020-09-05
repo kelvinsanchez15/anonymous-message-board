@@ -1,7 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const flash = require('connect-flash');
 require('dotenv').config();
 const apiThreadsRouter = require('./routers/api/threads');
 const apiRepliesRouter = require('./routers/api/replies');
@@ -10,11 +12,19 @@ const frontendBoardRouter = require('./routers/frontend/board');
 const app = express();
 
 // Configurations
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
+app.use(flash());
 
 app.set('view engine', 'pug');
 
@@ -32,6 +42,12 @@ mongoose
   .catch((error) => console.log(error));
 
 mongoose.connection.on('error', (error) => console.log(error));
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // Main route defined
 app.get('/', (req, res) => res.render('index'));

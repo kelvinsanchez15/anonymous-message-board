@@ -8,8 +8,9 @@ router
 
   .post(async (req, res) => {
     const { board } = req.params;
+    const { host } = req.headers;
 
-    const response = await fetch(`http://localhost:3000/api/threads/${board}`, {
+    const response = await fetch(`http://${host}/api/threads/${board}`, {
       method: 'post',
       body: JSON.stringify(req.body),
       headers: { 'Content-Type': 'application/json' },
@@ -17,13 +18,16 @@ router
 
     await response.json();
 
+    req.flash('success', 'Your thread has been created successfully');
+
     res.redirect(board);
   })
 
   .get(async (req, res) => {
     const { board } = req.params;
+    const { host } = req.headers;
 
-    const response = await fetch(`http://localhost:3000/api/threads/${board}`);
+    const response = await fetch(`http://${host}/api/threads/${board}`);
 
     const threads = await response.json();
 
@@ -32,30 +36,48 @@ router
 
   .put(async (req, res) => {
     const { board } = req.params;
+    const { host } = req.headers;
 
-    const response = await fetch(`http://localhost:3000/api/threads/${board}`, {
-      method: 'put',
-      body: JSON.stringify(req.body),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+      const response = await fetch(`http://${host}/api/threads/${board}`, {
+        method: 'put',
+        body: JSON.stringify(req.body),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    const textResponse = await response.text();
+      await response.text();
 
-    res.send(textResponse);
+      req.flash('success', 'Your report has been submitted successfully');
+
+      res.redirect(board);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   })
 
   .delete(async (req, res) => {
     const { board } = req.params;
+    const { host } = req.headers;
 
-    const response = await fetch(`http://localhost:3000/api/threads/${board}`, {
-      method: 'delete',
-      body: JSON.stringify(req.body),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+      const response = await fetch(`http://${host}/api/threads/${board}`, {
+        method: 'delete',
+        body: JSON.stringify(req.body),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    const textResponse = await response.text();
+      const textResponse = await response.text();
 
-    res.send(textResponse);
+      if (textResponse === 'success') {
+        req.flash('success', 'The thread has been deleted successfully.');
+      } else {
+        req.flash('error', 'The password is incorrect. Try again.');
+      }
+
+      res.redirect(board);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   });
 
 module.exports = router;

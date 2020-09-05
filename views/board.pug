@@ -4,8 +4,12 @@ html
     include includes/head.pug
     title= board    
   body    
-    div.container
+    div.container      
       h1=`/b/ - ${board}`
+      if success && success.length > 0
+        div(class="alert alert-success")=success
+      if error && error.length > 0
+        div(class="alert alert-danger")=error
       div.dropdown.dropdown 
         button(class="btn btn-success dropdown-toggle", type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Create Thread
         div.dropdown-menu.w-100
