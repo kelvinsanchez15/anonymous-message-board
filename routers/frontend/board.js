@@ -10,28 +10,36 @@ router
     const { board } = req.params;
     const { host } = req.headers;
 
-    const response = await fetch(`http://${host}/api/threads/${board}`, {
-      method: 'post',
-      body: JSON.stringify(req.body),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+      const response = await fetch(`http://${host}/api/threads/${board}`, {
+        method: 'post',
+        body: JSON.stringify(req.body),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    await response.json();
+      await response.json();
 
-    req.flash('success', 'Your thread has been created successfully');
+      req.flash('success', 'Your thread has been created successfully');
 
-    res.redirect(board);
+      res.redirect(board);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   })
 
   .get(async (req, res) => {
     const { board } = req.params;
     const { host } = req.headers;
 
-    const response = await fetch(`http://${host}/api/threads/${board}`);
+    try {
+      const response = await fetch(`http://${host}/api/threads/${board}`);
 
-    const threads = await response.json();
+      const threads = await response.json();
 
-    res.render('board', { board, threads });
+      res.render('board', { board, threads });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   })
 
   .put(async (req, res) => {

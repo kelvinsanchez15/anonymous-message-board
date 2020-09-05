@@ -5,6 +5,7 @@ const session = require('cookie-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 require('dotenv').config();
+
 const apiThreadsRouter = require('./routers/api/threads');
 const apiRepliesRouter = require('./routers/api/replies');
 const frontendBoardRouter = require('./routers/frontend/board');
