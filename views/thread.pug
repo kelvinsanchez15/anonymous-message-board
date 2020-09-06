@@ -6,8 +6,8 @@ html
   body    
     div.container      
       div.col.text-center.mb-2          
-        a.h1.d-block(href=`/b/${board}`)=`/b/ - ${board}`
-        h2.text-muted=thread._id
+        a.h2.d-block(href=`/b/${board}`)=`/b/ - ${board}`
+        h3.text-muted (Thread)        
 
       if success && success.length > 0
         div(class="alert alert-success")=success
