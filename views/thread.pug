@@ -27,9 +27,10 @@ html
             input(class="btn btn-outline-success" type="submit" value="Submit")
       if !thread.error        
         div(class="card border-primary mb-3")
-          div(class="card-header d-flex justify-content-between align-items-center flex-wrap")=`Anonymous ${thread.created_on} ${thread._id}`
+          div(class="card-header d-flex justify-content-between align-items-center flex-wrap")
+            div #[strong.text-info Anonymous] #{thread.created_on}
             div.buttons.d-flex
-              form(action=`${thread._id}?_method=PUT`, method="post")
+              form.mr-2(action=`${thread._id}?_method=PUT`, method="post")
                 input(type="hidden", name="thread_id", value=thread._id)
                 input(class="btn btn-outline-warning", type="submit" value="Report")
               div.dropdown.dropdown 
@@ -45,9 +46,10 @@ html
             p(class="card-text")=thread.text              
             each reply in thread.replies
               div(class="card border-light mb-3")
-                div(class="card-header d-flex justify-content-between align-items-center flex-wrap")=`Anonymous ${reply.created_on} ${reply._id}`
+                div(class="card-header d-flex justify-content-between align-items-center flex-wrap")
+                  div #[strong Anonymous] #{reply.created_on}
                   div.buttons.d-flex
-                    form(action=`${thread._id}/report?_method=PUT`, method="post")
+                    form.mr-2(action=`${thread._id}/report?_method=PUT`, method="post")
                       input(type="hidden", name="thread_id", value=thread._id)
                       input(type="hidden", name="reply_id", value=reply._id)
                       input(class="btn btn-outline-warning", type="submit" value="Report")
