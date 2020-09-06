@@ -42,14 +42,16 @@ router
       const threads = await response.json();
 
       // Set relative time
-      threads.forEach((elem1) => {
-        const thread = elem1;
-        thread.created_on = moment(thread.created_on).fromNow();
-        thread.replies.forEach((elem2) => {
-          const reply = elem2;
-          reply.created_on = moment(reply.created_on).fromNow();
+      if (!threads.error) {
+        threads.forEach((elem1) => {
+          const thread = elem1;
+          thread.created_on = moment(thread.created_on).fromNow();
+          thread.replies.forEach((elem2) => {
+            const reply = elem2;
+            reply.created_on = moment(reply.created_on).fromNow();
+          });
         });
-      });
+      }
 
       res.render('board', { board, threads });
     } catch (err) {
