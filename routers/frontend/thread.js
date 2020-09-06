@@ -109,7 +109,7 @@ router.put('/:board/:id/report', async (req, res) => {
     if (textResponse === 'success') {
       req.flash('success', 'Your report has been submitted successfully');
     } else {
-      req.flash('error', 'Upps! An error');
+      req.flash('error', 'Upps! There was an error');
     }
 
     res.redirect(`/b/${board}/${req.body.thread_id}`);
@@ -132,7 +132,7 @@ router.delete('/:board/:id/delete', async (req, res) => {
     const textResponse = await response.text();
 
     if (textResponse === 'success') {
-      req.flash('success', 'The thread has been deleted successfully.');
+      req.flash('success', 'The reply has been deleted successfully.');
     } else {
       req.flash('error', 'The password is incorrect. Try again.');
     }
