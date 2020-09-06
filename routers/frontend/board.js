@@ -18,9 +18,13 @@ router
         headers: { 'Content-Type': 'application/json' },
       });
 
-      await response.json();
+      const thread = await response.json();
 
-      req.flash('success', 'Your thread has been created successfully');
+      if (thread.errors) {
+        req.flash('error', thread.message);
+      } else {
+        req.flash('success', 'Your thread has been created successfully');
+      }
 
       res.redirect(board);
     } catch (err) {
