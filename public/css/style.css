@@ -5,3 +5,7 @@ body {
 .dropdown-menu {
   min-width: 300px;
 }
+
+.card-text {
+  white-space: pre-wrap;
+}
