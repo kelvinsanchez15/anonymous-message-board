@@ -1,1 +1,30 @@
-h1 Hello index
+doctype html
+html
+  head
+    include includes/head.pug
+    title Anonymous Message Board    
+  body    
+    div.container
+      div.col.text-center.mb-3          
+        a.h1(href="/") Anonymous Message Board
+      
+      div.mb-3
+        h2 Front End Example:
+        a.h3(href="/b/general") Go to {project_url}/b/general
+
+      h2 User Stories:
+      ul.list-group.mb-4
+        li.list-group-item Only allow your site to be loading in an iFrame on your own pages.
+        li.list-group-item Do not allow DNS prefetching.
+        li.list-group-item Only allow your site to send the referrer for your own pages.
+        li.list-group-item I can #[strong POST] a thread to a specific message board by passing form data containing #[em text] and #[em delete_password] to #[code /api/threads/{board}]. The object saved (and returned) will include #[em _id], #[em text], #[em created_on], #[em bumped_on](starts same as created_on), #[em reported](boolean), #[em delete_password] and #[em replies](array).        
+        li.list-group-item I can #[strong POST] a reply to a thread on a specific message board by passing form data containing #[em text], #[em delete_password] and #[em thread_id] to #[code /api/replies/{board}] and it will also update the #[em bumped_on] date to the reply date. The object saved (and returned) will include #[em _id], #[em text], #[em created_on], #[em reported](boolean), and #[em delete_password].        
+        li.list-group-item I can #[strong GET] an array of the most recent 10 bumped threads on the board with only the most recent 3 replies each from #[code /api/threads/{board}]. The #[em reported] and #[em delete_password] fields will not be sent to the client.
+        li.list-group-item I can #[strong GET] an entire thread with all its replies from #[code /api/replies/{board}?thread_id={thread_id}]. The #[em reported] and #[em delete_password] fields will not be sent to the client.
+        li.list-group-item I can delete a thread completely if I send a #[strong DELETE] request to #[code /api/threads/{board}] and pass along the #[em thread_id] and #[em delete_password]. (Text response will be 'incorrect password' or 'success')
+        li.list-group-item I can delete a post(just changing the text to '[deleted]' instead of removing completely like a thread) if I send a #[strong DELETE] request to #[code /api/replies/{board}] and pass along the #[em thread_id], #[em reply_id] and #[em delete_password]. (Text response will be 'incorrect password' or 'success')
+        li.list-group-item I can report a thread and change its reported value to true by sending a #[strong PUT] request to #[code /api/threads/{board}] and pass along the #[em thread_id]. (Text response will be 'success')
+        li.list-group-item I can report a reply and change its reported value to true by sending a #[strong PUT] request to #[code /api/replies/{board}] and pass along the #[em thread_id] and #[em reply_id]. (Text response will be 'success')      
+        li.list-group-item Complete functional tests that wholely test routes and pass.  
+
+    include includes/foot.pug
