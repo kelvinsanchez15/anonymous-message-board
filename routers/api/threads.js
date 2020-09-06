@@ -71,7 +71,7 @@ router
         {
           reported: true,
         },
-        { useFindAndModify: false }
+        { useFindAndModify: false, timestamps: false }
       );
 
       if (!thread) return res.status(404).json({ error: 'thread not found' });
