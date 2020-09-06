@@ -1,5 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const moment = require('moment');
 
 const router = express.Router({ mergeParams: true });
 
@@ -36,6 +37,14 @@ router
       const response = await fetch(url);
 
       const thread = await response.json();
+
+      // Set relative time
+      thread.created_on = moment(thread.created_on).fromNow();
+
+      thread.replies.forEach((elem) => {
+        const reply = elem;
+        reply.created_on = moment(reply.created_on).fromNow();
+      });
 
       res.render('thread', { board, thread });
     } catch (err) {
