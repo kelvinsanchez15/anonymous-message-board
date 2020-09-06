@@ -2,11 +2,12 @@ doctype html
 html
   head
     include includes/head.pug
-    title= board    
+    title #{board} - thread    
   body    
     div.container      
       div.col.text-center.mb-2          
-        a.h1(href=`/b/${board}`)=`/b/ - ${board}`
+        a.h1.d-block(href=`/b/${board}`)=`/b/ - ${board}`
+        h2.text-muted=thread._id
 
       if success && success.length > 0
         div(class="alert alert-success")=success
